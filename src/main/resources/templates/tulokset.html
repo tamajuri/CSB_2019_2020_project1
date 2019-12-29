@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Search signup</title>
+    </head>
+    <body>
+
+        <h1>Search results:</h1>
+
+        <ul>
+            <li th:each="sign: ${haetut}">
+                <span th:text="${sign.name}">nimi </span>, address: <span th:text="${sign.address}">osoite</span>
+            </li>
+        </ul>
+
+        <p></p>
+    </body>
+</html>

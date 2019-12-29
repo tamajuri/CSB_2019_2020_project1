@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Search signup</title>
+    </head>
+    <body>
+
+        <h1>Search by name:</h1>
+
+        <form action="#" th:action="@{/hae}" method="POST">
+            <p><label for="name">Name</label>: <input type="text" name="name" id="name"/></p>
+            <p><input type="submit" value="Submit" /></p>
+        </form>
+        
+        <ul>
+            <li th:each="sign: ${haetut}">
+                <span th:text="${sign.name}, address: ${sign.address}">nimet...</span>
+            </li>
+        </ul>
+
+        <p></p>
+    </body>
+</html>

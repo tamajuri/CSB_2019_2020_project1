@@ -1,0 +1,61 @@
+LINK: <link to the repository>
+This project is developed from the provided start situation. It is normal java project and does not need any kind of special installations. Only download and open in your NetBeans, install missing depencies if not already insstalled, and run the main class. The server will run in the adderess: "http://localhost:8080/".
+
+FLAW 1
+Description of flaw 1:
+Cross - Site Scripting vulnerability, because in security configuration csrf is disabled.
+
+How to fix:
+Remove line
+http.csrf().disable();
+from SecurityConfiguration file and add extra input to the forms in templates:
+<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+
+FLAW 2
+Description of flaw 2:
+Cross - Site Scripting vulnerability
+If user sign up into the event by signup form typing for example javascript code in to the name or address field, that code will be run when listing all signups in the address "...//very-secret-url-to-signups". You can try it out by typing as the name "<script>alert("Hello!")</script> and then some address and then submit. After submitting move to the address ".../very-secret-url-to-signups" and you will get an alert there.
+
+How to fix it:
+The user input should be validated in the server side before saving into the database. In addition to that, inserting to the database should be done by secure way so that malicious code is not able to save and will not be run. Using prepared statements and Spring Jpa:s entities and repositories and ORM that all would be easier to avoid.
+
+FLAW 3:
+Description of flaw 3:
+SQL injection
+I created my own InSecureDto.java where SQL Queries and signup insertions are made without any safe statement preparing or user input validation or escaping. That causes very big secutrity risks. With SQL injections attaccer is able to modify data in the database and even save there some malicious code which may be run in the server or in some clients web browser. You cab test out the sql injection flaw by typing following characters into the search by name field at url ".../hae":
+a' OR 'a' = 'a
+
+That causes that web browser shows the data of all signups. Even more harm could be done by this flaw.
+
+How to fix it:
+Using Spring Framework normal entities and JPA repositories and prepared statements are very easy and important way to try to avoid SQL injection possibilities. -user input validation and escaping at the server side is also very important to do before saving any user spesific data into the database or before rendering it to any clients front end.
+
+FLAW 4:
+Description of flaw 3:
+Broken Authentication and Security Misconfiguration
+All these flaws here have somehow some kind of link to each others. Maybe the most first thing to get whole the system more secure is to write better security configuration. There are very poor security configuration now and that leads into many kind of flaws in the system. The access of un authenticated users is only partly resricted. For example the address ".../very-secret-url-to-signups" is missing from the configuration file. It should be there defined so that authentication is required and in addition to that, only admins can access it.
+
+How to fix it:
+First of all all requests shuold be restricted by defining:
+http.authorizeRequests().anyRequest().authenticated();
+
+So we can not forget any path from security config so that it causes additional risks. Now we can separetely define those addressess which are permitted for all. That way is more secure and trusted. In addition to that, also priviledges should be defined so that only admins could access for example address ".../very-secret-url-to-signups".
+
+FLAW 5:
+Description of flaw 5:
+Broken Access Control
+There are secret url: ".../very-secret-url-to-signups" and only authenticated and authorized admins should be able to access it but the only shield securing that content is the "secret" url. That's why there are broken access control flaw which leads to situation where everyone who knows the secret url can access the content.
+
+How to fix it:
+A developer have to modify the security configuration in the security configuration file so that only authenticated users with admin priviledges are able to acces that page amd content. Authentication checking is able to repeat also in the corresponding controller, but the first one is more important.
+
+This flaw leads also into the next vulnerability:
+
+
+FLAW 6:
+Description of flaw 6:
+Sensitive data exposure
+The list including all sensitive information of signed users are available for attakers knowing the secret url without any kind of authentication. All the names and addresses are able to copy from there for different kind of unwanted purposes.
+
+How to fix it:
+The configuration should be modified so that instead of secret url to access sensitive data it is located behind of trusted authentication and authorization bypass. In security configuration this url shoul be defined so that it requires authentication.
