@@ -1,4 +1,5 @@
-LINK: <link to the repository>
+LINK: https://github.com/tamajuri/CSB_2019_2020_project1
+
 This project is developed from the provided start situation. It is normal java project and does not need any kind of special installations. Only download and open in your NetBeans, install missing depencies if not already insstalled, and run the main class. The server will run in the adderess: "http://localhost:8080/".
 
 FLAW 1
@@ -6,9 +7,9 @@ Description of flaw 1:
 Cross - Site Scripting vulnerability, because in security configuration csrf is disabled.
 
 How to fix:
-Remove line
+Remove the following line from thesecurity configuration file:
 http.csrf().disable();
-from SecurityConfiguration file and add extra input to the forms in templates:
+In addition to that an extra input have to be added to the forms in html templates of the project:
 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 
 FLAW 2
